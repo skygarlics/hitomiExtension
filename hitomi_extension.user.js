@@ -4,27 +4,27 @@
 // @description hitomi.la extension
 // @include     http://hitomi.la/reader/*
 // @include     https://hitomi.la/reader/*
-// @version     1.01
+// @version     1.02
 // @grant       none
 // ==/UserScript==
 
 function wheelFunction(e) {
   if (e.deltaY > 0) {
     //alert('Wheel down');
-    unsafeWindow.nextPanel();
+    nextPanel();
   } else if (e.deltaY < 0) {
     //alert('Wheel up');
-    unsafeWindow.prevPanel();
+    prevPanel();
   }
 }
 
 function keyPress(e) {
   if (e.keyCode == 81) {
     //alert('Q pressed');
-    unsafeWindow.nextPanel();
+    nextPanel();
   } else if (e.keyCode == 69) {
     //alert('E pressed');
-    unsafeWindow.prevPanel();
+    prevPanel();
   } else if (e.keyCode == 84) {
     //alert('T pressed');
     togglePager();
@@ -76,7 +76,7 @@ function togglePager() {
     pagerButton.parentNode.classList.add("disable");
     pagerButton.childNodes[0].classList.remove("icon-white");
 
-    togglePager.interval = setInterval(unsafeWindow.nextPanel, second*1000);
+    togglePager.interval = setInterval(nextPanel, second*1000);
 
   } else {
     var pagerButton = document.getElementById("autoPager");
@@ -88,12 +88,10 @@ function togglePager() {
 }
 
 
-// event lister for shortcut
 document.addEventListener('keydown', keyPress);
 document.addEventListener('wheel', wheelFunction);
 
-
-// slideshow
 addPagerButton();
 document.getElementById("autoPager").addEventListener("click", togglePager);
+
 addTimerBox();
