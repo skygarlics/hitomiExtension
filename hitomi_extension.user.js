@@ -4,7 +4,7 @@
 // @description hitomi.la extension
 // @include     http://hitomi.la/reader/*
 // @include     https://hitomi.la/reader/*
-// @version     1.02
+// @version     1.03
 // @grant       none
 // ==/UserScript==
 
@@ -31,7 +31,7 @@ function keyPress(e) {
   }
 }
 
-function addPagerButton() {
+function addTimerButton() {
   var uol = document.getElementById("singlePage").parentNode.parentNode;
   var lst = document.createElement("li");
   var lnk = document.createElement("a");
@@ -43,7 +43,7 @@ function addPagerButton() {
   lnk.title     = "t key";
   lnk.id        = "autoPager";
   lnk.innerHTML += " Auto pager";
-
+  
   lst.appendChild(lnk);
   uol.appendChild(lst);
 }
@@ -53,16 +53,56 @@ function addTimerBox() {
   var lst = document.createElement("li");
   var ipt = document.createElement("input");
 
-  ipt.type = "text";
-  ipt.id = "pageTimer";
+  ipt.type        = "text";
+  ipt.id          = "pageTimer";
   ipt.style.width = "40px";
-  ipt.value = 0;
+  ipt.value       = "0";
 
   lst.appendChild(ipt);
   lst.style.margin = "5px 0px";
 
   uol.appendChild(lst);
 }
+
+
+// hijack old drawpanel()
+var oldDraw = unsafeWindow.drawPanel;
+unsafeWindow.drawPanel = drawPanel;
+
+function drawPanel() {
+  // call old function first
+  oldDraw();
+     
+  var imgSpace = document.getElementById("comicImages");
+  var img = imgSpace.firstChild;
+  
+  // make buttons
+  var leftBtn = document.createElement("a");
+  leftBtn.id = "leftBtn";
+  var lefti = document.createElement("i")
+  lefti.setAttribute("class", "icon-chevron-left");
+  leftBtn.appendChild(lefti);
+    
+  var rightBtn = document.createElement("a");
+  rightBtn.id = "rightBtn";
+  var righti = document.createElement("i")
+  righti.setAttribute("class", "icon-chevron-right");  
+  rightBtn.appendChild(righti);
+ 
+  // set css
+  var common = "position: fixed;width: 30%;height: 100%;font-size: 50px; color: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;" 
+  leftBtn.style.cssText = common+"left: 0;";
+  rightBtn.style.cssText = common+"right: 0;";
+  
+  // add button
+  imgSpace.insertBefore(leftBtn,img);
+  imgSpace.insertBefore(rightBtn,img);
+  
+  // add eventlistener
+  document.getElementById("leftBtn").addEventListener("click", nextPanel);
+  document.getElementById("rightBtn").addEventListener("click", prevPanel);
+}
+
 
 function togglePager() {
   var second = document.getElementById("pageTimer").value;
@@ -87,11 +127,11 @@ function togglePager() {
   }
 }
 
-
 document.addEventListener('keydown', keyPress);
 document.addEventListener('wheel', wheelFunction);
 
-addPagerButton();
+addTimerButton();
 document.getElementById("autoPager").addEventListener("click", togglePager);
-
 addTimerBox();
+
+addPageButton();
