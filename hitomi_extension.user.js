@@ -4,7 +4,7 @@
 // @description hitomi.la extension
 // @include     http://hitomi.la/reader/*
 // @include     https://hitomi.la/reader/*
-// @version     1.03
+// @version     1.04
 // @grant       none
 // ==/UserScript==
 
@@ -31,18 +31,25 @@ function keyPress(e) {
   }
 }
 
-function addTimerButton() {
+function addNavButton(buttonType) {
   var uol = document.getElementById("singlePage").parentNode.parentNode;
   var lst = document.createElement("li");
   var lnk = document.createElement("a");
   var icn = document.createElement("i");
-
-  icn.setAttribute("class", "icon-time icon-white");
-
-  lnk.appendChild(icn);
-  lnk.title     = "t key";
-  lnk.id        = "autoPager";
-  lnk.innerHTML += " Auto pager";
+  
+  if (buttonType == "timer"){
+    icn.setAttribute("class", "icon-time icon-white");
+    lnk.appendChild(icn);
+    lnk.title     = "t key";
+    lnk.id        = "autoPager";
+    lnk.innerHTML += " Auto pager";
+  } else if (buttonType == "cover") {
+    icn.setAttribute("class", "icon-file icon-white");
+    lnk.appendChild(icn);
+    lnk.title     = "c key";
+    lnk.id        = "coverSwitcher";
+    lnk.innerHTML += " Cover switcher";
+  }
   
   lst.appendChild(lnk);
   uol.appendChild(lst);
@@ -63,7 +70,6 @@ function addTimerBox() {
 
   uol.appendChild(lst);
 }
-
 
 // hijack old drawpanel()
 var oldDraw = unsafeWindow.drawPanel;
@@ -127,11 +133,69 @@ function togglePager() {
   }
 }
 
+function toggleCover() {
+    toggleCover.flag = toggleCover.flag? 0: 1;
+    if (toggleCover.flag) {        
+        // gallery info
+        var tmp = galleryinfo[0]
+        galleryinfo.splice(0,0,tmp);
+               
+        // attach cover
+        var url = document.getElementsByClassName("img-url")[0].innerHTML;
+        images.splice(0,0,{path:url,loaded:true});
+        unsafeWindow.number_of_images += 1;
+        var pages = document.getElementById("comicImages").getElementsByTagName("img").length;
+        unsafeWindow.curPanel = parseInt(curPanel) + pages;
+        
+        // single page
+        var selector = document.getElementById("single-page-select");
+        var opt = document.createElement("option");
+        opt.setAttribute("value", number_of_images);
+        opt.innerHTML = "Page "+number_of_images.toString();
+        selector.appendChild(opt);   
+               
+        // two page
+        var selector = document.getElementById("two-page-select");
+        selector.innerHTML = "";
+        createDropdown(2);                   
+    } else {
+        // galleryinfo
+        galleryinfo.shift();
+        
+        // remove cover
+        images.shift();
+        var selector = document.getElementById("single-page-select");
+        unsafeWindow.number_of_images -= 1;
+        var pages = document.getElementById("comicImages").getElementsByTagName("img").length;
+        unsafeWindow.curPanel = parseInt(curPanel) - pages; 
+        
+        // single page
+        selector.selectedIndex = parseInt(selector.selectedIndex) - 1;
+        selector.removeChild(selector.lastChild);
+        
+        // two page
+        var selector = document.getElementById("two-page-select");
+        selector.innerHTML = "";
+        createDropdown(2);         
+    }
+
+    if (display == 1){
+        updateDropdown(1);
+    } else {
+        //hashChanged();
+        updateDropdown(2); 
+    }    
+    //drawPanel();
+}
+
 document.addEventListener('keydown', keyPress);
 document.addEventListener('wheel', wheelFunction);
 
-addTimerButton();
+addNavButton("timer");
 document.getElementById("autoPager").addEventListener("click", togglePager);
 addTimerBox();
+
+addNavButton("cover");
+document.getElementById("coverSwitcher").addEventListener("click", toggleCover);
 
 addPageButton();
