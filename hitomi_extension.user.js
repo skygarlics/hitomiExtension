@@ -27,7 +27,7 @@ function keyPress(e) {
     prevPanel();
   } else if (e.keyCode == 84) {
     //alert('T pressed');
-    togglePager();
+    toggleTimer();
   }
 }
 
@@ -42,13 +42,13 @@ function addNavButton(buttonType) {
     lnk.appendChild(icn);
     lnk.title     = "t key";
     lnk.id        = "autoPager";
-    lnk.innerHTML += " Auto pager";
+    lnk.innerHTML += " Auto";
   } else if (buttonType == "cover") {
     icn.setAttribute("class", "icon-file icon-white");
     lnk.appendChild(icn);
     lnk.title     = "c key";
     lnk.id        = "coverSwitcher";
-    lnk.innerHTML += " Cover switcher";
+    lnk.innerHTML += " Cover";
   }
   
   lst.appendChild(lnk);
@@ -110,26 +110,26 @@ function drawPanel() {
 }
 
 
-function togglePager() {
+function toggleTimer() {
   var second = document.getElementById("pageTimer").value;
   if (second < 1 || isNaN((second))) {
     return
   }
 
-  togglePager.flag = togglePager.flag? 0 : 1;
-  if (togglePager.flag) {
+  toggleTimer.flag = toggleTimer.flag? 0 : 1;
+  if (toggleTimer.flag) {
     var pagerButton = document.getElementById("autoPager");
     pagerButton.parentNode.classList.add("disable");
     pagerButton.childNodes[0].classList.remove("icon-white");
 
-    togglePager.interval = setInterval(nextPanel, second*1000);
+    toggleTimer.interval = setInterval(nextPanel, second*1000);
 
   } else {
     var pagerButton = document.getElementById("autoPager");
     pagerButton.parentNode.classList.remove("disable");
     pagerButton.childNodes[0].classList.add("icon-white");
 
-    clearInterval(togglePager.interval);
+    clearInterval(toggleTimer.interval);
   }
 }
 
@@ -192,7 +192,7 @@ document.addEventListener('keydown', keyPress);
 document.addEventListener('wheel', wheelFunction);
 
 addNavButton("timer");
-document.getElementById("autoPager").addEventListener("click", togglePager);
+document.getElementById("autoPager").addEventListener("click", toggleTimer);
 addTimerBox();
 
 addNavButton("cover");
