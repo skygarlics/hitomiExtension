@@ -4,9 +4,19 @@
 // @description hitomi.la extension
 // @include     http://hitomi.la/reader/*
 // @include     https://hitomi.la/reader/*
-// @version     1.04
+// @version     1.05
 // @grant       none
 // ==/UserScript==
+
+var addStyle = typeof GM_addStyle !== 'undefined' ? GM_addstyle :
+function (css) {
+  var parent = document.head || document.documentElement;
+  var style = document.createElement('style');
+  style.type = 'text/css'
+  var textNode = document.createTextNode(css);
+  style.appendChild(textNode);
+  parent.appendChild(style);
+}
 
 function wheelFunction(e) {
   if (e.deltaY > 0) {
@@ -56,17 +66,17 @@ function addNavButton(buttonType) {
 }
 
 function addTimerBox() {
-  var uol = document.getElementById("single-page-select").parentNode.parentNode;
+  var uol = document.getElementById("singlePage").parentNode.parentNode;
   var lst = document.createElement("li");
   var ipt = document.createElement("input");
 
   ipt.type        = "text";
   ipt.id          = "pageTimer";
-  ipt.style.width = "40px";
+  ipt.style.cssText = "width: 40px; margin:0px 0px";
   ipt.value       = "0";
 
   lst.appendChild(ipt);
-  lst.style.margin = "5px 0px";
+  lst.style.cssText = "padding: 0px 0px; margin:5px 0px";
 
   uol.appendChild(lst);
 }
@@ -96,7 +106,7 @@ function drawPanel() {
   rightBtn.appendChild(righti);
  
   // set css
-  var common = "position: fixed;width: 30%;height: 100%;font-size: 50px; color: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;" 
+  var common = "position: fixed; z-index: 1;width: 30%;height: 100%;font-size: 50px; color: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;" 
   leftBtn.style.cssText = common+"left: 0;";
   rightBtn.style.cssText = common+"right: 0;";
   
@@ -188,14 +198,17 @@ function toggleCover() {
     //drawPanel();
 }
 
+addStyle("img {position: relative; top: 50%; transform: translateY(-50%);}");
+
+
 document.addEventListener('keydown', keyPress);
 document.addEventListener('wheel', wheelFunction);
+
+addNavButton("cover");
+document.getElementById("coverSwitcher").addEventListener("click", toggleCover);
 
 addNavButton("timer");
 document.getElementById("autoPager").addEventListener("click", toggleTimer);
 addTimerBox();
-
-addNavButton("cover");
-document.getElementById("coverSwitcher").addEventListener("click", toggleCover);
 
 addPageButton();
