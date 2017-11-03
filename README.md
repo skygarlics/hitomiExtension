@@ -1,20 +1,23 @@
+[![works badge](https://cdn.rawgit.com/skygarlics/works-on-my-machine/v0.2.0/badge.svg)](https://github.com/skygarlics/works-on-my-machine)  
+
 # Hitomi.la extension
 
-개인적인 편의를 위해 몇가지 기능을 추가하였습니다
+Hitomi.la viewer extension for [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko).  
+[ExhViewer](https://github.com/skygarlics/exhviewer) is based on this script.
 
-- 키보드
-E : 이전페이지
-Q : 다음페이지
+## Additional feature
+- More hotkey  
+E : Prev page
+Q : Next page
 
-- 마우스
-wheel up : 이전 페이지
-wheel down : 다음페이지
+- Wheel support  
+wheel up : Prev page  
+wheel down : Next page
 
-- Auto pager(Page timer):
-pages 옆의 input에 수 n을 넣고 Autopager 버튼을 누를 경우 n초 후 페이지 전환
+- Page change button on screen  
 
-- prev, next button on image:
-이미지 표시부에서 왼쪽을 누르면 다음페이지, 오른쪽을 누르면 다음페이지로 전환
+- Slideshow  
+Go next Page after n seconds automatically
 
-- Cover switcher:
-페이지 분할된 이미지가 full sperad로 볼때 잘리는 경우, 커버페이지를 하나 더 추가
+- Cover switcher  
+Duplicate cover image incase of full-spread page is incorrect
